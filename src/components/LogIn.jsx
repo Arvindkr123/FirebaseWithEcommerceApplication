@@ -28,7 +28,7 @@ const LogIn = () => {
             <br /><br />
             <br /><br />
             <h1>LogIn</h1>
-            <hr /><hr />
+            <hr />
             {successMsg && <>
                 <div className='success-msg'>{successMsg}</div>
                 <br></br>
