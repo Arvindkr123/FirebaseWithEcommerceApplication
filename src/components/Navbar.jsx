@@ -32,7 +32,7 @@ const Navbar = ({ user }) => {
                         <Link className="navlink" to='/cart'>
                             <HiOutlineShoppingCart size={'35px'} />
                         </Link>
-                        {/* <span className='cart-indicator'>{totalQty}</span> */}
+                        {/* <span className='cart-indicator'>{0}</span> */}
                     </div>
                     <div className="btn btn-danger btn-md" onClick={handleLogOut}>
                         LOGOUT
