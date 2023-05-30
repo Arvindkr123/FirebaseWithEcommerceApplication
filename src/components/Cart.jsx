@@ -42,6 +42,43 @@ const Cart = () => {
     }, [])
 
     console.log(cartProducts)
+
+    // cart product increase
+    let Product;
+    const cartProudctIncrease = (product) => {
+        // console.log(product)
+        Product = product;
+        // increase the qty
+        Product.qty += 1;
+        // update the total amount
+        Product.TotalProductPrice = Product.qty * Product.price;
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                fs.collection('cart' + user.uid).doc(product.ID).update(Product);
+            } else {
+                console.log('user is not logged in to increase the cart qty')
+            }
+        })
+    }
+    const cartProudctDecrease = (product) => {
+        // console.log(product)
+        Product = product;
+        // increase the qty
+        if (Product.qty > 1) {
+            Product.qty -= 1;
+            Product.TotalProductPrice = Product.qty * Product.price;
+        }
+        // update the total amount
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                fs.collection('cart' + user.uid).doc(product.ID).update(Product);
+            } else {
+                console.log('user is not logged in to decrease the cart qty')
+            }
+        })
+    }
+
+
     return (
         <>
             <Navbar user={user} />
@@ -50,7 +87,11 @@ const Cart = () => {
                 <div className="container-fluid">
                     <h1 className="text-center">Cart</h1>
                     <div className="products-box">
-                        <CartProducts cartProducts={cartProducts} />
+                        <CartProducts
+                            cartProducts={cartProducts}
+                            cartProudctIncrease={cartProudctIncrease}
+                            cartProudctDecrease={cartProudctDecrease}
+                        />
                     </div>
                 </div>
             )}
