@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar';
 import { auth, fs } from '../Config/Config';
-import Products from './Products';
 import CartProducts from './CartProducts.jsx'
+import { MdOutlineCurrencyRupee } from 'react-icons/md';
+import StripeCheckout from 'react-stripe-checkout';
 
 const Cart = () => {
     function GetCurrentUser() {
@@ -78,10 +79,46 @@ const Cart = () => {
         })
     }
 
+    const qty = cartProducts.map(cartProduct => {
+        return cartProduct.qty;
+    })
+    console.log(qty)
+
+    const totalQty = qty.reduce((acc, cur) => {
+        acc += cur;
+        return acc;
+    }, 0)
+
+    console.log('Total Quantity of the Product ', totalQty)
+
+    // make the total product price
+    const price = cartProducts.map(cartProduct => {
+        return cartProduct.TotalProductPrice;
+    })
+    console.log('This is the total Product price of array', price)
+
+    const totalProductPrice = price.reduce((acc, cur) => {
+        acc = acc + cur;
+        return acc;
+    }, 0)
+    console.log(totalProductPrice);
+
+    const [totalProducts, setTotalProducts] = useState(0);
+    // getting cart products
+    useEffect(() => {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                fs.collection('cart' + user.uid).onSnapshot(snapshot => {
+                    const qty = snapshot.docs.length;
+                    setTotalProducts(qty);
+                })
+            }
+        })
+    }, [])
 
     return (
         <>
-            <Navbar user={user} />
+            <Navbar user={user} totalProducts={totalProducts} />
             <br /><br />
             {cartProducts.length > 0 && (
                 <div className="container-fluid">
@@ -92,6 +129,20 @@ const Cart = () => {
                             cartProudctIncrease={cartProudctIncrease}
                             cartProudctDecrease={cartProudctDecrease}
                         />
+                    </div>
+                    <div className='summary-box text-center'>
+                        <h5 className='text-center'>Cart Summary</h5>
+                        <br></br>
+                        <div>
+                            Total No of Products: <span>{totalQty}</span>
+                        </div>
+                        <div>
+                            Total Price to Pay: <span>  <MdOutlineCurrencyRupee /> {totalProductPrice}</span>
+                        </div>
+                        <br></br>
+                        <StripeCheckout>
+                            <button className='btn btn-primary text-capitalize'>Pay with Card</button>
+                        </StripeCheckout>
                     </div>
                 </div>
             )}

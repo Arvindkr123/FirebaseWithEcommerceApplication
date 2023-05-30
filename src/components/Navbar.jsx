@@ -5,7 +5,7 @@ import { HiOutlineShoppingCart } from 'react-icons/hi'
 import { auth } from '../Config/Config'
 
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user , totalProducts}) => {
     const navigate = useNavigate();
     const handleLogOut = () => {
         auth.signOut().then(() => {
@@ -32,7 +32,7 @@ const Navbar = ({ user }) => {
                         <Link className="navlink" to='/cart'>
                             <HiOutlineShoppingCart size={'35px'} />
                         </Link>
-                        {/* <span className='cart-indicator'>{0}</span> */}
+                        <span className='cart-indicator'>{totalProducts}</span>
                     </div>
                     <div className="btn btn-danger btn-md" onClick={handleLogOut}>
                         LOGOUT

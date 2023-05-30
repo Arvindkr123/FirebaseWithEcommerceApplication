@@ -47,6 +47,19 @@ const Home = () => {
         getProducts();
     }, [])
 
+    const [totalProducts, setTotalProducts] = useState(0);
+    // getting cart products
+    useEffect(() => {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                fs.collection('cart' + user.uid).onSnapshot(snapshot => {
+                    const qty = snapshot.docs.length;
+                    setTotalProducts(qty);
+                })
+            }
+        })
+    },[])
+
     const getUserId = () => {
         const [uId, setUId] = useState(null);
         useEffect(() => {
@@ -78,7 +91,7 @@ const Home = () => {
 
     return (
         <div>
-            <Navbar user={user} />
+            <Navbar user={user} totalProducts={totalProducts} />
             {products.length > 0 && (
                 <div className='container-fluid mt-5'>
                     <h1 className='text-center'>Products</h1>
